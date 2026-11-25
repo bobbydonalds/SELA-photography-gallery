@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lihat foto dan detailnya di album fotografi Sela.">
+  <meta name="theme-color" content="#f9f8f4">
+  <title>Album | Sela</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script defer src="assets/data.js"></script>
+  <script defer src="assets/gallery.js"></script>
+  <script defer src="assets/alpine.min.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#konten">Lewati ke konten</a>
+  <header class="site-header shell flex items-center justify-between">
+    <a class="wordmark inline-flex items-center" href="index.html" aria-label="Sela, beranda">
+      <span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>sela<span class="wordmark-dot">.</span></span>
+    </a>
+    <nav class="site-nav flex items-center" aria-label="Navigasi utama">
+      <a href="index.html">Portofolio</a>
+      <a href="galeri.html" aria-current="location">Galeri</a>
+    </nav>
+  </header>
+  <main id="konten" class="shell inner-page" x-data="albumPage">
+    <a class="back-link inline-flex items-center" href="galeri.html">Kembali ke galeri</a>
+    <section class="page-intro album-intro" :data-tone="album?.tone" aria-labelledby="album-title" x-cloak>
+      <div>
+        <p class="eyebrow"><span aria-hidden="true"></span> <span x-text="album ? album.photos.length + ' foto' : 'Galeri foto'"></span></p>
+        <h1 id="album-title"><span x-text="album?.title || 'Album tidak ditemukan'"></span><span class="heading-dot">.</span></h1>
+        <p x-text="album?.description || 'Pilih album yang tersedia di halaman galeri.'"></p>
+      </div>
+      <div class="color-motif" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    </section>
+
+    <section class="photo-grid grid sm:grid-cols-2 lg:grid-cols-3" aria-label="Foto dalam album" x-show="album" x-cloak>
+      <template x-for="(photo, index) in album?.photos || []" :key="photo.src">
+        <button class="photo-card" type="button" @click="openPhoto(index)" aria-haspopup="dialog" :aria-label="'Lihat detail foto ' + photo.title">
+          <span class="gallery-image">
+            <img :src="photo.src" :alt="photo.alt" loading="lazy" decoding="async">
+          </span>
+          <span class="photo-card-label flex items-center justify-between gap-3">
+            <span x-text="photo.title"></span>
+            <span class="project-icon" aria-hidden="true"><i></i></span>
+          </span>
+        </button>
+      </template>
+    </section>
+    <noscript><p>Aktifkan JavaScript untuk melihat foto dalam album.</p></noscript>
+
+    <dialog class="photo-dialog" x-ref="dialog" aria-labelledby="photo-title" aria-describedby="photo-description"
+      @click.self="closePhoto()" @close="clearPhoto()" @keydown.left.prevent="movePhoto(-1)" @keydown.right.prevent="movePhoto(1)">
+      <div class="dialog-controls">
+        <button class="dialog-close" type="button" @click="closePhoto()" aria-label="Tutup detail foto" autofocus>×</button>
+      </div>
+      <template x-if="currentPhoto">
+        <div class="dialog-panel">
+          <div class="dialog-image">
+            <img :src="currentPhoto.src" :alt="currentPhoto.alt">
+          </div>
+          <div class="dialog-details">
+            <p class="eyebrow dialog-album"><span aria-hidden="true"></span> <span x-text="album.title"></span></p>
+            <h2 id="photo-title" x-text="currentPhoto.title"></h2>
+            <p id="photo-description" class="dialog-description" x-text="currentPhoto.description"></p>
+            <dl class="photo-dates">
+              <div x-show="currentPhoto.takenDate">
+                <dt>Tanggal diambil</dt>
+                <dd><time :datetime="currentPhoto.takenDate" x-text="formatDate(currentPhoto.takenDate)"></time></dd>
+              </div>
+              <div x-show="currentPhoto.uploadDate">
+                <dt>Tanggal diunggah</dt>
+                <dd><time :datetime="currentPhoto.uploadDate" x-text="formatDate(currentPhoto.uploadDate)"></time></dd>
+              </div>
+              <div x-show="!currentPhoto.takenDate && !currentPhoto.uploadDate">
+                <dt>Tanggal</dt><dd>Belum dicantumkan</dd>
+              </div>
+            </dl>
+            <div class="dialog-navigation flex flex-wrap items-center justify-between gap-2" x-show="album.photos.length > 1">
+              <button type="button" @click="movePhoto(-1)" class="action action-outline">Sebelumnya</button>
+              <p class="photo-position" aria-live="polite" x-text="(selectedIndex + 1) + ' / ' + album.photos.length"></p>
+              <button type="button" @click="movePhoto(1)" class="action action-outline">Berikutnya</button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </dialog>
+  </main>
+  <footer class="site-footer shell flex items-center justify-center gap-3">
+    <a class="wordmark footer-brand inline-flex items-center" href="index.html" aria-label="Sela, beranda">
+      <span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>sela<span class="wordmark-dot">.</span></span>
+    </a>
+    <p>&copy;<span data-current-year></span> Sela. All Rights reserved........</p>
+  </footer>
+</body>
+</html>

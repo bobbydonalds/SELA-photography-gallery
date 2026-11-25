@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Jelajahi album fotografi Sela.">
+  <meta name="theme-color" content="#f9f8f4">
+  <title>Galeri | Sela</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script defer src="assets/data.js"></script>
+  <script defer src="assets/gallery.js"></script>
+  <script defer src="assets/alpine.min.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#konten">Lewati ke konten</a>
+  <header class="site-header shell flex items-center justify-between">
+    <a class="wordmark inline-flex items-center" href="index.html" aria-label="Sela, beranda">
+      <span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>sela<span class="wordmark-dot">.</span></span>
+    </a>
+    <nav class="site-nav flex items-center" aria-label="Navigasi utama">
+      <a href="index.html">Portofolio</a>
+      <a href="galeri.html" aria-current="page">Galeri</a>
+    </nav>
+  </header>
+  <main id="konten" class="shell inner-page" x-data="albumList">
+    <section class="page-intro" aria-labelledby="gallery-title">
+      <div>
+        <p class="eyebrow"><span aria-hidden="true"></span> Galeri foto</p>
+        <h1 id="gallery-title">Album foto<span>.</span></h1>
+        <p>Pilih album untuk melihat koleksi fotonya.</p>
+      </div>
+      <div class="color-motif" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    </section>
+
+    <section class="album-grid grid md:grid-cols-2" aria-label="Daftar album" x-cloak>
+      <template x-for="album in albums" :key="album.id">
+        <article class="album-card" :data-tone="album.tone">
+          <a :href="albumUrl(album)" :aria-label="'Buka album ' + album.title">
+            <div class="album-preview">
+              <template x-for="photo in album.photos.slice(0, 4)" :key="photo.src">
+                <img :src="photo.src" :alt="photo.alt" loading="lazy" decoding="async">
+              </template>
+            </div>
+            <div class="album-details flex items-center justify-between gap-4">
+              <div>
+                <h2 x-text="album.title"></h2>
+                <p x-text="album.photos.length + ' foto'"></p>
+              </div>
+              <span class="action action-outline">Buka album</span>
+            </div>
+          </a>
+        </article>
+      </template>
+    </section>
+    <noscript><p>Aktifkan JavaScript untuk melihat daftar album.</p></noscript>
+  </main>
+  <footer class="site-footer shell flex items-center justify-center gap-3">
+    <a class="wordmark footer-brand inline-flex items-center" href="index.html" aria-label="Sela, beranda">
+      <span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>sela<span class="wordmark-dot">.</span></span>
+    </a>
+    <p>&copy;<span data-current-year></span> Sela. All Rights reserved........</p>
+  </footer>
+</body>
+</html>
